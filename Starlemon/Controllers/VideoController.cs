@@ -4,13 +4,22 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Starlemon.Models;
 
 namespace Starlemon.Controllers
 {
     [Route("/video")]
     public class VideoController : Controller
     {
+        private readonly StarlemonContext _starlemonContext;
+
+        public VideoController(StarlemonContext starlemonContext)
+        {
+            _starlemonContext = starlemonContext;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -18,17 +27,34 @@ namespace Starlemon.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Index(int id)
+        public async Task<IActionResult> Index(int id)
         {
-            if (!Videos.TryGetValue(id, out var infos))
+            //if (!Videos.TryGetValue(id, out var infos))
+            //{
+            //    return NotFound();
+            //}
+
+            //ViewBag.Url = infos[0].url;
+            //var videoQualities = infos.Select(t => new VideoQuality(t.name, t.url));
+
+            // Default page number.
+            var pageNumber = 1;
+            // Get video and pages, as well as verify if page exists.
+            var video = await _starlemonContext.Videos.Where(v => v.Id == id).Include(v => v.Pages).FirstOrDefaultAsync();
+            if (video == null || video.Pages.Count < pageNumber)
             {
                 return NotFound();
             }
 
-            ViewBag.Url = infos[0].url;
-            var videoQualities = infos.Select(t => new VideoQuality(t.name, t.url));
-            ViewBag.Quality = JsonConvert.SerializeObject(videoQualities);
+            var page = video.Pages[pageNumber - 1];
 
+            // Get nodes.
+            var nodes = await _starlemonContext.VideoPages.Where(p => p.Id == page.Id).SelectMany(p => p.Nodes).Include(p => p.Node).ToListAsync();
+
+            var videoQualities = nodes.Select(n => new VideoQuality(n.Node.Name, new Uri(n.Node.Uri, page.VideoPath).AbsoluteUri));
+
+            // Convert qualities to json and return.
+            ViewBag.Quality = JsonConvert.SerializeObject(videoQualities);
             return View();
         }
 
