@@ -1,9 +1,9 @@
 ﻿
 @{
-    ViewData["Title"] = "视频";
+    ViewData["Title"] = ViewBag.VideoTitle;
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.VideoTitle</h2>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>

@@ -48,6 +48,9 @@ namespace Starlemon.Controllers
 
             var page = video.Pages[pageNumber - 1];
 
+            // Set title.
+            ViewBag.VideoTitle = string.IsNullOrEmpty(page.Remark) ? video.Title : page.Remark;
+
             // Get nodes.
             var nodes = await _starlemonContext.VideoPages.Where(p => p.Id == page.Id).SelectMany(p => p.Nodes).Include(p => p.Node).ToListAsync();
 
