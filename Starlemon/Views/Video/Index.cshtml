@@ -9,6 +9,11 @@
 <script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/2.4.7/shaka-player.compiled.js"></script>
 <div id="dplayer"></div>
+@for (int i = 1; i <= ViewBag.Pages.Count; i++)
+{
+    var page = ViewBag.Pages[i - 1];
+    <p><a href="?pageNumber=@(i)">@($"{i}. " + page.Remark)</a></p>
+}
 <script>
     const dp = new DPlayer({
         container: document.getElementById('dplayer'),

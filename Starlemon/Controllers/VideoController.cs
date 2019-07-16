@@ -27,7 +27,7 @@ namespace Starlemon.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id, int pageNumber = 1)
         {
             //if (!Videos.TryGetValue(id, out var infos))
             //{
@@ -37,8 +37,9 @@ namespace Starlemon.Controllers
             //ViewBag.Url = infos[0].url;
             //var videoQualities = infos.Select(t => new VideoQuality(t.name, t.url));
 
-            // Default page number.
-            var pageNumber = 1;
+            // Check page number.
+            if (pageNumber <= 0)
+                return BadRequest();
             // Get video and pages, as well as verify if page exists.
             var video = await _starlemonContext.Videos.Where(v => v.Id == id).Include(v => v.Pages).FirstOrDefaultAsync();
             if (video == null || video.Pages.Count < pageNumber)
@@ -47,6 +48,8 @@ namespace Starlemon.Controllers
             }
 
             var page = video.Pages[pageNumber - 1];
+            // Set pages.
+            ViewBag.Pages = video.Pages;
 
             // Set title.
             ViewBag.VideoTitle = string.IsNullOrEmpty(page.Remark) ? video.Title : page.Remark;
