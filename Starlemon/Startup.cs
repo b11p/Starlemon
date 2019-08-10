@@ -49,7 +49,6 @@ namespace Starlemon
             }
 
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
             app.UseMvc(routes =>
             {
