@@ -13,7 +13,7 @@
 @for (int i = 1; i <= ViewBag.Pages.Count; i++)
 {
     var page = ViewBag.Pages[i - 1];
-    <p><a href="?pageNumber=@(i)">@($"{i}. " + page.Remark)</a></p>
+    <p><a asp-route-pageNumber="@i">@($"{i}. " + page.Remark)</a></p>
 }
 <script>
     const dp = new DPlayer({
