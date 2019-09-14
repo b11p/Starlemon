@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.28922.388
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starlemon", "Starlemon\Starlemon.csproj", "{5A9B5D58-97B6-4485-AC5F-99CFAA6BAD4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starlemon.Models", "Starlemon.Models\Starlemon.Models.csproj", "{3228E77E-5194-4205-8DBF-1D4E87ED2307}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Starlemon.Models", "Starlemon.Models\Starlemon.Models.csproj", "{3228E77E-5194-4205-8DBF-1D4E87ED2307}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starlemon.VideoManager", "Starlemon.VideoManager\Starlemon.VideoManager.csproj", "{2F118802-0AD7-4E5E-BD08-5E27A0E6861B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3228E77E-5194-4205-8DBF-1D4E87ED2307}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3228E77E-5194-4205-8DBF-1D4E87ED2307}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3228E77E-5194-4205-8DBF-1D4E87ED2307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F118802-0AD7-4E5E-BD08-5E27A0E6861B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F118802-0AD7-4E5E-BD08-5E27A0E6861B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F118802-0AD7-4E5E-BD08-5E27A0E6861B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F118802-0AD7-4E5E-BD08-5E27A0E6861B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
