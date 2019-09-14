@@ -11,7 +11,8 @@ namespace Starlemon.VideoManager
     {
         static async Task Main(string[] args)
         {
-            await AddFullSeasonAsync("title", 24, "title/{0:D2}/manifest.mpd", new[] { "unicom" });
+            //await AddFullSeasonAsync("title", 24, "title/{0:D2}/manifest.mpd", new[] { "unicom" });
+            await AddNodesForVideo(14, new[] { "cn" });
         }
 
         static async Task AddFullSeasonAsync(string title, int episodes, string path, string[] nodes)
@@ -36,6 +37,24 @@ namespace Starlemon.VideoManager
                 };
 
                 starlemonContext.Videos.Add(video);
+                await starlemonContext.SaveChangesAsync();
+                transcation.Commit();
+            }
+        }
+
+        static async Task AddNodesForVideo(int videoId, string[] nodes)
+        {
+            using (var starlemonContext = new StarlemonContext())
+            using (var transcation = await starlemonContext.Database.BeginTransactionAsync())
+            {
+                var node = starlemonContext.Set<Node>().Where(n => nodes.Contains(n.Name));
+                var nodeIds = await node.Select(n => n.Id).ToListAsync();
+                IEnumerable<VideoPageNode> pageNodesLazy = nodeIds.Select(nodeId => new VideoPageNode { NodeId = nodeId });
+                var pages = await starlemonContext.VideoPages.Include(p => p.Nodes).Where(p => p.VideoId == videoId).ToListAsync();
+                foreach (var page in pages)
+                {
+                    page.Nodes.AddRange(pageNodesLazy);
+                }
                 await starlemonContext.SaveChangesAsync();
                 transcation.Commit();
             }
