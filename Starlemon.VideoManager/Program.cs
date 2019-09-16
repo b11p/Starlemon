@@ -12,7 +12,15 @@ namespace Starlemon.VideoManager
         static async Task Main(string[] args)
         {
             //await AddFullSeasonAsync("title", 24, "title/{0:D2}/manifest.mpd", new[] { "unicom" });
-            await AddNodesForVideo(14, new[] { "cn" });
+            //await AddNodesForVideo(14, new[] { "cn" });
+            IEnumerable<string> GetTitles()
+            {
+                for (int i = 0; i < 24; i++)
+                {
+                    yield return Console.ReadLine();
+                }
+            }
+            await AddPageRemarkAsync(14, GetTitles());
         }
 
         static async Task AddFullSeasonAsync(string title, int episodes, string path, string[] nodes)
@@ -55,6 +63,23 @@ namespace Starlemon.VideoManager
                 {
                     page.Nodes.AddRange(pageNodesLazy);
                 }
+                await starlemonContext.SaveChangesAsync();
+                transcation.Commit();
+            }
+        }
+
+        private static async Task AddPageRemarkAsync(int videoId, IEnumerable<string> remarks)
+        {
+            using (var starlemonContext = new StarlemonContext())
+            using (var transcation = await starlemonContext.Database.BeginTransactionAsync())
+            {
+                var pages = await starlemonContext.VideoPages.Where(p => p.VideoId == videoId).OrderBy(p => p.PageId).ToListAsync();
+                var updatedPages = pages.Zip(remarks, (p, r) =>
+                {
+                    p.Remark = r;
+                    return p;
+                });
+                starlemonContext.VideoPages.UpdateRange(updatedPages);
                 await starlemonContext.SaveChangesAsync();
                 transcation.Commit();
             }
