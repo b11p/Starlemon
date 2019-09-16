@@ -46,6 +46,7 @@ namespace Starlemon.Controllers
             {
                 return NotFound();
             }
+            video.Pages = video.Pages.OrderBy(p => p.PageId).ToList();
 
             var page = video.Pages[pageNumber - 1];
             // Set pages.
