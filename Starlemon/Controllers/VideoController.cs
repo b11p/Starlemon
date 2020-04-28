@@ -95,7 +95,7 @@ namespace Starlemon.Controllers
             }
         }
 
-        public class VideoQuality
+        private class VideoQuality
         {
             public VideoQuality([JsonProperty]string name, [JsonProperty]string url)
             {
