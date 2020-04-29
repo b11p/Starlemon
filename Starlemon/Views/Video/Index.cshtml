@@ -9,11 +9,12 @@
 <script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>
 @*<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/2.4.7/shaka-player.compiled.js"></script>*@
 <script src="https://cdn.jsdelivr.net/npm/shaka-player/dist/shaka-player.compiled.js"></script>
+<script src="~/js/dash.all.min.js"></script>
 <div id="dplayer"></div>
 @for (int i = 1; i <= ViewBag.Pages.Count; i++)
 {
     var page = ViewBag.Pages[i - 1];
-    <p><a asp-route-pageNumber="@i">@($"{i}. " + page.Remark)</a></p>
+<p><a asp-route-pageNumber="@i">@($"{i}. " + page.Remark)</a></p>
 }
 <script>
     const dp = new DPlayer({
@@ -40,7 +41,8 @@
                                 baseDelay: 100,  // the base delay in ms between retries
                                 // backoffFactor: 2, // the multiplicative backoff factor between retries
                                 // fuzzFactor: 0.5,  // the fuzz factor to apply to each retry delay
-                            }
+                            },
+                            smallGapLimit: 0
                         },
                         abr: {
                             defaultBandwidthEstimate: 2000000, // bits per second.
@@ -59,6 +61,24 @@
                     // }).catch(onError);  // onError is executed if the asynchronous load fails.
 
                     playerShaka.load(src);
+                },
+                'dashJS': function (video, player) {
+                    var src = video.src;
+
+                    var sPlayer = dashjs.MediaPlayer().create();
+                    sPlayer.initialize();
+                    sPlayer.updateSettings({
+                        'debug': {
+                        },
+                        'streaming': {
+                            'bufferTimeAtTopQualityLongForm': 240,
+                            jumpGaps: false,
+                            'fastSwitchEnabled': true       // enables buffer replacement when switching bitrates for faster switching
+                        }
+                    });
+                    //sPlayer.setAutoPlay(false); // remove this line if you want the player to start automatically on load
+                    sPlayer.attachView(video); // tell the player which videoElement it should use
+                    sPlayer.attachSource(src); // provide the manifest source
                 }
             }
         }
